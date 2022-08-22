@@ -217,7 +217,7 @@ SwapAudioMic(device_A_Capture)
 			VA_SetDefaultEndpoint(default_id, 0) ;Sets default device
 			VA_SetDefaultEndpoint(default_id, 2) ;Sets default communication
 			
-			Run Lib\nircmd.exe setsysvolume %MicVolumeConver% default_record ;Full volume is 65535 so 85% is 65535*0.85
+			VA_SetMasterVolume(85, , MicId)
 		} else {
 ;			msgbox mic already set
 		}
@@ -323,7 +323,6 @@ SetVolLoop:
 	global index
 	
 	if(index < TimerRunTimerseconds) {
-		msgbox % index TimerRunTimerseconds
 		VA_SetMasterVolume(85, , MicId)
 		index++
 	} else {
