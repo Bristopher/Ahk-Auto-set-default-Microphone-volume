@@ -1,12 +1,19 @@
-; v2.36
+Version := 2.4
 /*
-Adjusted wording
+Works now without nirCMD, updated "update" function. added less resource intensive update checker (~11kb -> 4bytes)
 */
 
 #Persistent
 
-if !FileExist("Lib\nircmd.exe") {
+if !FileExist("Lib\VA.ahk") {
 	MsgBox, Error! make sure you also download and keep the Lib folder in the same folder as this script
+}
+
+if !FileExist("version.txt") {
+	FileAppend,
+	(
+	%Version%
+	), version.txt
 }
 
 if (FileExist(A_ScriptDir . "\options.txt")) {
@@ -81,10 +88,17 @@ ExitApp
 gosub Update
 
 Update:
-	URLDownloadToFile, https://raw.githubusercontent.com/Bristopher/Ahk-Auto-set-default-Microphone-volume/main/Auto-set-default-Microphone-vol.ahk, update.txt
+	URLDownloadToFile, https://raw.githubusercontent.com/Bristopher/Ahk-Auto-set-default-Microphone-volume/main/version.txt, update.txt
 	FileReadLine, update, update.txt, 1
-
-	if (update = "; v2.36") {
+	
+	verString := "Version :=  " . Version
+	msgbox % verString
+	
+	if(update = "404: Not Found") {
+		msgbox, Error fetching file, check github/Bristoper for an update or connect to internet`n`nscript was not updated
+		GoTo NoUpdate
+	}
+	if (update = verString) {
 		FileDelete, update.txt
 		GoTo NoUpdate
 	} else {
@@ -96,7 +110,8 @@ Update:
 			doUpdate := True
 		
 		if (doUpdate = "True") {
-			FileCopy, update.txt, Auto set default Microphone vol v2.1 cleaned up code.ahk, 1
+			;FileCopy, update.txt, Auto set default Microphone vol v2.1 cleaned up code.ahk, 1
+			URLDownloadToFile, https://raw.githubusercontent.com/Bristopher/Ahk-Auto-set-default-Microphone-volume/main/Auto-set-default-Microphone-vol.ahk, Auto-set-default-Microphone-vol.ahk
 			FileDelete, update.txt
 			msgbox, The script will now close.  Please restart it to apply the update!
 			ExitApp
@@ -147,6 +162,7 @@ global DesiredMicVolume := Array[3]
 global MicVolume := 85
 global MicVolumeConver := ((65535 * MicVolume) /100)
 
+global index := 0
 ; Loads user Config
 
 
@@ -266,15 +282,18 @@ MicVolSetLoop() {
 	global DesiredMicVolume
 	global MicVolume
 	global MicVolumeConver
-;	loops for 2 minutes running command every 1 second (2minutes = 120s | 120 loops each 1s)
 
-	Run, Lib\nircmd.exe loop 120 1000 setsysvolume %MicVolumeConver% default_record ;Full volume is 65535 so 85% is 65535*0.85
+
+;	loops for 2 minutes running command every 1 second (2minutes = 120s | 120 loops each 1s)
+	SetTimer, SetVolLoop, 1000
+	; resets loop execution index
+	global index := 0
 	
 	return
 }
 
 MicVolSetMAX() {
-	Run, Lib\nircmd.exe setsysvolume 65535 default_record ;Full volume is 65535
+	VA_SetMasterVolume(100, , MicId)
 return
 }
 
@@ -285,13 +304,14 @@ MicVolSet() {
 	global MicVolume
 	global MicVolumeConver
 
-	Run Lib\nircmd.exe setsysvolume %MicVolumeConver% default_record
+	VA_SetMasterVolume(85, , MicId)
 
 	return
 }
 
 MicVolSetQuit() {
-	Run, Lib\nircmd.exe killprocess nircmd.exe"
+	; Run, Lib\nircmd.exe killprocess nircmd.exe"
+	settimer, SetVolLoop, OFF
 return
 }
 
@@ -301,7 +321,26 @@ return
 }
 
 
+SetVolLoop:
+	global MicId
+	global HeadphonesId
+	global DesiredMicVolume
+	global MicVolume
+	global MicVolumeConver
+	global TimerRunTimerseconds := 120 ; runtime ie 2minutes at 1s execution intervals
+	global index
+	
+	if(index < TimerRunTimerseconds) {
+		msgbox % index TimerRunTimerseconds
+		VA_SetMasterVolume(85, , MicId)
+		index++
+	} else {
+		; after x executions (120 default) stops loop
+		settimer, SetVolLoop, OFF
+	}
+	
 
+return
 
 
 
