@@ -4,5 +4,4 @@ Ahk script to automatically set microphone volume, comes in handy when when laun
 Installation:
 
   Download zip of repo and unzip into a folder
-  
   That's it
