@@ -92,7 +92,6 @@ Update:
 	FileReadLine, update, update.txt, 1
 	
 	verString := "Version :=  " . Version
-	msgbox % verString
 	
 	if(update = "404: Not Found") {
 		msgbox, Error fetching file, check github/Bristoper for an update or connect to internet`n`nscript was not updated
