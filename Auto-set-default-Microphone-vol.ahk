@@ -85,7 +85,7 @@ Update:
 	URLDownloadToFile, https://raw.githubusercontent.com/Bristopher/Ahk-Auto-set-default-Microphone-volume/main/Auto-set-default-Microphone-vol.ahk, update.txt
 	FileReadLine, update, update.txt, 1
 
-	if (update = "; v2.3") {
+	if (update = "; v2.35") {
 		FileDelete, update.txt
 		GoTo NoUpdate
 	} else {
