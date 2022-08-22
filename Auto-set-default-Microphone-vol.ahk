@@ -1,6 +1,6 @@
-; Last updated 8 21 22
+﻿; v2.3
 /*
-Cleaned up code
+Fixed Updater
 */
 
 #Persistent
@@ -76,29 +76,35 @@ MsgBox Config saved in same directory as this script! ;`n`n*
 Return
 	ExitApp
 }
-
+gosub Update
 
 Update:
 	URLDownloadToFile, https://raw.githubusercontent.com/Bristopher/Ahk-Auto-set-default-Microphone-volume/main/Auto-set-default-Microphone-vol.ahk, update.txt
 	FileReadLine, update, update.txt, 1
 
-	if (update = "`; Last updated 8 21 22") {
-	  FileDelete, update.txt
-	  GoTo NoUpdate
+	if (update = "; v2.3") {
+		FileDelete, update.txt
+		GoTo NoUpdate
 	} else {
-	  FileReadLine, reason, update.txt, 3
-	  msgbox, A new version of this script has been released!  Please press F6 to update to the latest version, or F4 to continue with this version.`n`nReson for update: %reason%
-	  F6::
-	  FileCopy, update.txt, Auto set default Microphone vol v2.1 cleaned up code.ahk, 1
-	  FileDelete, update.txt
-	  msgbox, The script will now close.  Please restart it to apply the update!
-	  ExitApp
-	  return
-	  F4::
-	  msgbox, This script will not be updated!
-	  FileDelete, update.txt
-	  GoTo NoUpdate
-	  return
+		FileReadLine, reason, update.txt, 3
+		MsgBox, 4, , A new version of this script has been released!  `n`nPlease press YES to update to the latest version, `nor NO to continue with this version.`n`n`n`nReson for update: %reason%
+		
+		doUpdate := False
+		IfMsgBox, Yes 
+			doUpdate := True
+		
+		if (doUpdate = "True") {
+			FileCopy, update.txt, Auto set default Microphone vol v2.1 cleaned up code.ahk, 1
+			FileDelete, update.txt
+			msgbox, The script will now close.  Please restart it to apply the update!
+			ExitApp
+			return
+		} else {
+			msgbox, This script will not be updated!
+			FileDelete, update.txt
+			gosub NoUpdate
+		}
+	
 	}
 
 
@@ -247,6 +253,8 @@ SwapAudioDevice(device_A_Playback)
     if !(A)
         throw Exception("Unknown audio device, try fixing name", -1, HeadphonesId)
 	
+	
+	
 	return
 }
 
@@ -259,7 +267,8 @@ MicVolSetLoop() {
 ;	loops for 2 minutes running command every 1 second (2minutes = 120s | 120 loops each 1s)
 
 	Run, Lib\nircmd.exe loop 120 1000 setsysvolume %MicVolumeConver% default_record ;Full volume is 65535 so 85% is 65535*0.85
-return
+	
+	return
 }
 
 MicVolSetMAX() {
@@ -276,8 +285,7 @@ MicVolSet() {
 
 	Run Lib\nircmd.exe setsysvolume %MicVolumeConver% default_record
 
-	
-return
+	return
 }
 
 MicVolSetQuit() {
