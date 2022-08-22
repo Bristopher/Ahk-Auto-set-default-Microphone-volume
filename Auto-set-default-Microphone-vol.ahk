@@ -1,10 +1,13 @@
-﻿; v2.3
+; v2.35
 /*
-Fixed Updater
+Added check for missing Lib folder
 */
 
 #Persistent
 
+if !FileExist("Lib\nircmd.exe") {
+	MsgBox, Error! make sure you also download and keep the Lib folder in the same folder as this script
+}
 
 if (FileExist(A_ScriptDir . "\options.txt")) {
 	
