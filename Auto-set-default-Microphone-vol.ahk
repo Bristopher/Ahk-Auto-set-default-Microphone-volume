@@ -74,10 +74,9 @@ DO NOT EDIT THIS SINGLE LINE OF TEXT
 ), %A_ScriptDir%\options.txt
 	
 
-MsgBox Config saved in same directory as this script! ;`n`n*
+MsgBox Config saved in same directory as this script! Please restart script ;`n`n*
 
-Return
-	ExitApp
+ExitApp
 }
 gosub Update
 
