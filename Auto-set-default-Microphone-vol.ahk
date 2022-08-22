@@ -1,6 +1,6 @@
-; v2.35
+; v2.36
 /*
-Added check for missing Lib folder
+Adjusted wording
 */
 
 #Persistent
@@ -85,7 +85,7 @@ Update:
 	URLDownloadToFile, https://raw.githubusercontent.com/Bristopher/Ahk-Auto-set-default-Microphone-volume/main/Auto-set-default-Microphone-vol.ahk, update.txt
 	FileReadLine, update, update.txt, 1
 
-	if (update = "; v2.35") {
+	if (update = "; v2.36") {
 		FileDelete, update.txt
 		GoTo NoUpdate
 	} else {
@@ -103,7 +103,7 @@ Update:
 			ExitApp
 			return
 		} else {
-			msgbox, This script will not be updated!
+			msgbox, The script was not updated
 			FileDelete, update.txt
 			gosub NoUpdate
 		}
