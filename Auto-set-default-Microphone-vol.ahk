@@ -1,11 +1,10 @@
-﻿; Last updated 8 21 22
+; Last updated 8 21 22
 /*
 Cleaned up code
 */
 
 #Persistent
 
-Update()
 
 if (FileExist(A_ScriptDir . "\options.txt")) {
 	
@@ -79,17 +78,32 @@ Return
 }
 
 
+Update:
+	URLDownloadToFile, https://raw.githubusercontent.com/Bristopher/Ahk-Auto-set-default-Microphone-volume/main/Auto-set-default-Microphone-vol.ahk, update.txt
+	FileReadLine, update, update.txt, 1
+
+	if (update = "`; Last updated 8 21 22") {
+	  FileDelete, update.txt
+	  GoTo NoUpdate
+	} else {
+	  FileReadLine, reason, update.txt, 3
+	  msgbox, A new version of this script has been released!  Please press F6 to update to the latest version, or F4 to continue with this version.`n`nReson for update: %reason%
+	  F6::
+	  FileCopy, update.txt, Auto set default Microphone vol v2.1 cleaned up code.ahk, 1
+	  FileDelete, update.txt
+	  msgbox, The script will now close.  Please restart it to apply the update!
+	  ExitApp
+	  return
+	  F4::
+	  msgbox, This script will not be updated!
+	  FileDelete, update.txt
+	  GoTo NoUpdate
+	  return
+	}
 
 
-global MicId := Array[1]
-global HeadphonesId := Array[2]
-global DesiredMicVolume := Array[3]
 
-global MicVolume := 85
-global MicVolumeConver := ((65535 * MicVolume) /100)
-
-; Loads user Config
-
+NoUpdate:
 
 ; Each array must be initialized before use:
 global Array := []
@@ -118,6 +132,14 @@ Loop % ArrayCount
 }
 
 
+global MicId := Array[1]
+global HeadphonesId := Array[2]
+global DesiredMicVolume := Array[3]
+
+global MicVolume := 85
+global MicVolumeConver := ((65535 * MicVolume) /100)
+
+; Loads user Config
 
 
 SwapAudioMic(MicId) 
@@ -161,7 +183,7 @@ SwapAudioMic(device_A_Capture)
 	
 
     ; Get device IDs.
-    A := VA_GetDevice(Array[1]), VA_IMMDevice_GetId(A, A_C_id)
+    A := VA_GetDevice(MicId), VA_IMMDevice_GetId(A, A_C_id)
 	
 	if A
     {
@@ -173,7 +195,7 @@ SwapAudioMic(device_A_Capture)
 		
 		
         ; If device A isn't default set it, if is is do nothing (or smth like send a message)
-		if Array[1] != default_id
+		if MicId != default_id
 		{
 			default_id := A_C_id
 			VA_SetDefaultEndpoint(default_id, 0) ;Sets default device
@@ -187,7 +209,7 @@ SwapAudioMic(device_A_Capture)
     }
     ObjRelease(A)
     if !(A)
-        throw Exception("Unknown audio device, try fixing name", -1, Array[1])
+        throw Exception("Unknown audio device, try fixing name", -1, MicId)
 	
 	return
 }
@@ -202,7 +224,7 @@ SwapAudioDevice(device_A_Playback)
 	
 	
     ; Get device IDs.
-    A := VA_GetDevice(Array[2]), VA_IMMDevice_GetId(A, A_P_id)
+    A := VA_GetDevice(HeadphonesId), VA_IMMDevice_GetId(A, A_P_id)
     if A
     {
         ; Get ID of default playback device.
@@ -211,7 +233,7 @@ SwapAudioDevice(device_A_Playback)
         ObjRelease(default)
         
         ; If device A isn't default set it, if is is do nothing (or smth like send a message)
-		if Array[2] != default_id
+		if HeadphonesId != default_id
 		{
 			default_id := A_P_id
 			VA_SetDefaultEndpoint(default_id, 0) ;Sets default device
@@ -223,7 +245,7 @@ SwapAudioDevice(device_A_Playback)
     }
     ObjRelease(A)
     if !(A)
-        throw Exception("Unknown audio device, try fixing name", -1, Array[2])
+        throw Exception("Unknown audio device, try fixing name", -1, HeadphonesId)
 	
 	return
 }
@@ -270,27 +292,8 @@ return
 
 
 
-Update:
-URLDownloadToFile, https://raw.githubusercontent.com/Bristopher/Ahk-Auto-set-default-Microphone-volume/main/Auto-set-default-Microphone-vol.ahk, update.txt
-FileReadLine, update, update.txt, 1
-if (update = "`; Last updated 8 21 22") {
-  FileDelete, update.txt
-  GoTo NoUpdate
-} else {
-  FileReadLine, reason, update.txt, 3
-  msgbox, A new version of this script has been released!  Please press F6 to update to the latest version, or F4 to continue with this version.`n`nReson for update: %reason%
-  F6::
-  FileCopy, update.txt, Auto set default Microphone vol v2.1 cleaned up code.ahk, 1
-  FileDelete, update.txt
-  msgbox, The script will now close.  Please restart it to apply the update!
-  ExitApp
-  return
-  F4::
-  msgbox, This script will not be updated!
-  FileDelete, update.txt
-  GoTo NoUpdate
-  return
-}
+
+
 
 
 
