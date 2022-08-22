@@ -9,12 +9,6 @@ if !FileExist("Lib\VA.ahk") {
 	MsgBox, Error! make sure you also download and keep the Lib folder in the same folder as this script
 }
 
-if !FileExist("version.txt") {
-	FileAppend,
-	(
-	%Version%
-	), version.txt
-}
 
 if (FileExist(A_ScriptDir . "\options.txt")) {
 	
@@ -91,13 +85,12 @@ Update:
 	URLDownloadToFile, https://raw.githubusercontent.com/Bristopher/Ahk-Auto-set-default-Microphone-volume/main/version.txt, update.txt
 	FileReadLine, update, update.txt, 1
 	
-	verString := "Version :=  " . Version
 	
 	if(update = "404: Not Found") {
 		msgbox, Error fetching file, check github/Bristoper for an update or connect to internet`n`nscript was not updated
 		GoTo NoUpdate
 	}
-	if (update = verString) {
+	if (update = Version) {
 		FileDelete, update.txt
 		GoTo NoUpdate
 	} else {
