@@ -1,6 +1,6 @@
-Version := 2.41
+Version := 2.4
 /*
-Removed last of the NirCMD dependencies
+Works now without nirCMD, updated "update" function. added less resource intensive update checker (~11kb -> 4bytes)
 */
 
 #Persistent
@@ -185,7 +185,7 @@ Menu, Tray, Add, Exit, ExitBut
 
  ;When Black Ops 3 is opened this loops for every second for 120 times (2min) ahk_class is found using "Window Spy"
 WinWait, ahk_class CoDBlackOps
-	Run, Lib\nircmd.exe loop 120 1000 setsysvolume %MicVolumeConver% default_record ;Full volume is 65535 so 85% is 65535*0.85
+	MicVolSetLoop()
 	
 
 SwapAudioMic(device_A_Capture)
