@@ -1,6 +1,6 @@
-Version := 2.4
+Version := 2.41
 /*
-Works now without nirCMD, updated "update" function. added less resource intensive update checker (~11kb -> 4bytes)
+Removed last of the NirCMD dependencies
 */
 
 #Persistent
