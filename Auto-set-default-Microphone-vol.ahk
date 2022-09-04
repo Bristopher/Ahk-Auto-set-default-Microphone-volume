@@ -36,9 +36,9 @@ DO NOT EDIT THIS SINGLE LINE OF TEXT
         |_|                          
 ==========**Options for variables**=========
 *********EVERYTHING IS CASE SENSITIVE********
-Open "Device Manager" -> select your microphone, right click -> "Properties" -> select Property "Device instance path" and use line after second the "\"----------------------------------------------First line usage: {0.0.1.00000000}.{77B25CCC-3F98-4A7A-ACDA-6325945A6878}
+Open "Device Manager" -> select your microphone, right click -> "Properties" -> select Property "Bus relations" and use line after second the "\"----------------------------------------------First line usage: {0.0.1.00000000}.{77B25CCC-3F98-4A7A-ACDA-6325945A6878}
 ; i.e. Device instance path = SWD\MMDEVAPI\{0.0.1.00000000}.{77B25CCC-3F98-4A7A-ACDA-6325945A6878} -> {0.0.1.00000000}.{77B25CCC-3F98-4A7A-ACDA-6325945A6878}
-Open "Device Manager" -> select your headphones, right click -> "Properties" -> select Property "Device instance path" and use line after second the "\"----------------------------------------------Second line usage: {0.0.0.00000000}.{691C7A88-58B5-419E-836D-902BCD2C8080}
+Open "Device Manager" -> select your headphones, right click -> "Properties" -> select Property "Bus relations" and use line after second the "\"----------------------------------------------Second line usage: {0.0.0.00000000}.{691C7A88-58B5-419E-836D-902BCD2C8080}
 What volume do you want your mic to be set to for normal usage?---------------------------------------------------------------------------------------------------------------------------------------Third line usage: 85
 ==============================================
 
