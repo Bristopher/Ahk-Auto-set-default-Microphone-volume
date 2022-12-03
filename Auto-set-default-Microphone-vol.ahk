@@ -22,7 +22,7 @@ if (FileExist(A_ScriptDir . "\options.txt")) {
 	VA_IMMDevice_GetId(a1, a12)
 	a2 := VA_GetDevice("playback")
 	VA_IMMDevice_GetId(a2, a23)
-	msgbox %a12% %a23%
+	; msgbox %a12% %a23%
 	
 	FileAppend,
 (
