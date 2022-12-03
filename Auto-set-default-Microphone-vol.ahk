@@ -1,6 +1,6 @@
-Version := 2.41
+Version := 2.52
 /*
-Removed last of the NirCMD dependencies
+Bug fix: said update available when no connected to a network | and added auto options.txt creation using current default mic and headphone ID
 */
 
 #Persistent
@@ -13,12 +13,21 @@ if !FileExist("Lib\VA.ahk") {
 if (FileExist(A_ScriptDir . "\options.txt")) {
 	
 }else {
-	MsgBox, Options file not found (first time running program most likely)`nEnter properties into options.txt
+	MsgBox, Options file not found (first time running program most likely)`nEnter properties into options.txt(by default this program writes the default mic and headphone id to be used)
+	
+	; Get device IDs.
+    A := VA_GetDevice(MicId), VA_IMMDevice_GetId(A, A_C_id)
+	
+	a1 := VA_GetDevice("capture")
+	VA_IMMDevice_GetId(a1, a12)
+	a2 := VA_GetDevice("playback")
+	VA_IMMDevice_GetId(a2, a23)
+	msgbox %a12% %a23%
 	
 	FileAppend,
 (
-{0.0.1.00000000}.{77B25CCC-3F98-4A7A-ACDA-6325945A6878}
-{0.0.0.00000000}.{691C7A88-58B5-419E-836D-902BCD2C8080}
+%a12%
+%a23%
 85
 DO NOT EDIT THIS SINGLE LINE OF TEXT
 
@@ -82,39 +91,47 @@ ExitApp
 gosub Update
 
 Update:
-	URLDownloadToFile, https://raw.githubusercontent.com/Bristopher/Ahk-Auto-set-default-Microphone-volume/main/version.txt, update.txt
-	FileReadLine, update, update.txt, 1
-	
-	
-	if(update = "404: Not Found") {
-		msgbox, Error fetching file, check github/Bristoper for an update or connect to internet`n`nscript was not updated
-		GoTo NoUpdate
-	}
-	if (update = Version) {
-		FileDelete, update.txt
-		GoTo NoUpdate
-	} else {
-		FileReadLine, reason, update.txt, 3
-		MsgBox, 4, , A new version of this script has been released!  `n`nPlease press YES to update to the latest version, `nor NO to continue with this version.`n`n`n`nReson for update: %reason%
+	try {
+		URLDownloadToFile, https://raw.githubusercontent.com/Bristopher/Ahk-Auto-set-default-Microphone-volume/main/version.txt, update.txt
+		FileReadLine, update, update.txt, 1
 		
-		doUpdate := False
-		IfMsgBox, Yes 
-			doUpdate := True
-		
-		if (doUpdate = "True") {
-			;FileCopy, update.txt, Auto set default Microphone vol v2.1 cleaned up code.ahk, 1
-			URLDownloadToFile, https://raw.githubusercontent.com/Bristopher/Ahk-Auto-set-default-Microphone-volume/main/Auto-set-default-Microphone-vol.ahk, Auto-set-default-Microphone-vol.ahk
+		if (update = Version) {
 			FileDelete, update.txt
-			msgbox, The script will now close.  Please restart it to apply the update!
-			ExitApp
-			return
+			GoTo NoUpdate
 		} else {
-			msgbox, The script was not updated
-			FileDelete, update.txt
-			gosub NoUpdate
+			FileReadLine, reason, update.txt, 3
+			MsgBox, 4, , A new version of this script has been released!  `n`nPlease press YES to update to the latest version, `nor NO to continue with this version.`n`n`n`nReson for update: %reason%
+			
+			doUpdate := False
+			IfMsgBox, Yes 
+				doUpdate := True
+			
+			if (doUpdate = "True") {
+				;FileCopy, update.txt, Auto set default Microphone vol v2.1 cleaned up code.ahk, 1
+				URLDownloadToFile, https://raw.githubusercontent.com/Bristopher/Ahk-Auto-set-default-Microphone-volume/main/Auto-set-default-Microphone-vol.ahk, Auto-set-default-Microphone-vol.ahk
+				FileDelete, update.txt
+				msgbox, The script will now close.  Please restart it to apply the update!
+				ExitApp
+				return
+			} else {
+				msgbox, The script was not updated
+				FileDelete, update.txt
+				gosub NoUpdate
+			}
+		
 		}
+	} catch e {
 	
+		if(update = "404: Not Found") {
+			msgbox, Error fetching file, check github/Bristoper for an update or connect to internet`n`nscript was not updated
+			GoTo NoUpdate
+		}
+		
 	}
+	
+	
+	
+	
 
 
 
