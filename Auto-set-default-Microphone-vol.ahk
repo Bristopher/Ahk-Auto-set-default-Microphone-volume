@@ -102,11 +102,11 @@ Update:
 			FileReadLine, reason, update.txt, 3
 			MsgBox, 4, , A new version of this script has been released!  `n`nPlease press YES to update to the latest version, `nor NO to continue with this version.`n`n`n`nReson for update: %reason%
 			
-			doUpdate := False
+			doUpdate := 0
 			IfMsgBox, Yes 
-				doUpdate := True
+				doUpdate := 1
 			
-			if (doUpdate = "True") {
+			if (doUpdate = 1) {
 				;FileCopy, update.txt, Auto set default Microphone vol v2.1 cleaned up code.ahk, 1
 				URLDownloadToFile, https://raw.githubusercontent.com/Bristopher/Ahk-Auto-set-default-Microphone-volume/main/Auto-set-default-Microphone-vol.ahk, Auto-set-default-Microphone-vol.ahk
 				FileDelete, update.txt
